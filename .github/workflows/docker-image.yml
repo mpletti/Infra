@@ -32,15 +32,15 @@ jobs:
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: mpletti/cyber
-
-      # Constrói e faz push da imagem Docker
+      # Constrói e faz push da imagem Docke
+           # Constrói e faz push da imagem Docker
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./CYBERTECH
+          file: ./CYBERTECH/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/cyber:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/cyber${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/cyber:${{ github.sha }}
           platforms: linux/amd64
