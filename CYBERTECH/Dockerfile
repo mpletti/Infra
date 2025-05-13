@@ -1,5 +1,5 @@
 # Use uma imagem base do Node.js (versão 18, compatível com Next.js 15)
-FROM node:18-alpine AS base
+FROM oven/bun AS base
 
 # Defina o diretório de trabalho
 WORKDIR /app
@@ -8,16 +8,16 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Instale as dependências (apenas produção para reduzir tamanho)
-RUN npm ci --omit=dev || npm install --omit=dev
+RUN bun install 
 
 # Copie o restante do projeto
 COPY . .
 
 # Build da aplicação
-RUN npm run build
+RUN bun run build
 
 # Segunda etapa (multi-stage build) para reduzir o tamanho da imagem
-FROM node:18-alpine AS runner
+FROM oven/bun AS runner
 
 WORKDIR /app
 
@@ -35,4 +35,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Comando para iniciar a aplicação
-CMD ["npm", "start"]
+CMD ["bun", "run" , "start"]
