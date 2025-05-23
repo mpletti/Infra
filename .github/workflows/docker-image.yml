@@ -17,6 +17,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Configura o QEMU para suporte a múltiplas arquiteturas
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       # Configura o Docker Buildx para suporte a múltiplas plataformas
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -27,13 +31,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Extrai metadados (tags, labels) para Docker
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: mpletti/cyber
-      # Constrói e faz push da imagem Docke
-           # Constrói e faz push da imagem Docker
+
+      # Constrói e faz push da imagem Docker
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -43,4 +49,5 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/cyber:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/cyber:${{ github.sha }}
-          platforms: linux/amd64
+          platforms: linux/arm64,linux/amd64
+          provenance: false
